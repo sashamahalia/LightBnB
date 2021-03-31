@@ -23,7 +23,8 @@ CREATE TABLE properties (
   number_of_bathrooms INTEGER NOT NULL DEFAULT 0,
   number_of_bedroorms INTEGER NOT NULL DEFAULT 0,
 
-  county VARCHAR(225) NOT NULL,
+  country VARCHAR(225) NOT NULL,
+  street VARCHAR(225) NOT NULL,
   city VARCHAR(225) NOT NULL,
   province VARCHAR(225) NOT NULL,
   post_code VARCHAR(225) NOT NULL,
