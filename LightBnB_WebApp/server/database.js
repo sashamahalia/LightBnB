@@ -110,13 +110,6 @@ exports.getAllReservations = getAllReservations;
  * @param {*} limit The number of results to return.
  * @return {Promise<[{}]>}  A promise to the properties.
  */
-//  const getAllProperties = function(options, limit = 10) {
-//   return Promise.resolve(pool.query(`
-//   SELECT * FROM properties
-//   LIMIT $1
-//   `, [limit])
-//   .then(res => res.rows));
-// }
 const getAllProperties = function(options, limit = 10) {
   const queryParams = [];
 
@@ -165,10 +158,24 @@ exports.getAllProperties = getAllProperties;
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
+// const addProperty = function(property) {
+//   const propertyId = Object.keys(properties).length + 1;
+//   property.id = propertyId;
+//   properties[propertyId] = property;
+//   return Promise.resolve(property);
+// }
+
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  console.log('property:', property);
+  return Promise.resolve(pool.query(`
+  INSERT INTO properties(title, description, number_of_bathrooms, number_of_bedrooms, parking_spaces, cost_per_night, thumbnail_photo_url, cover_photo_url, street, country, city, province, post_code, owner_id)
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;
+  `, [property.title, property.description, property.number_of_bathrooms, property.number_of_bedrooms, property.parking_spaces, property.cost_per_night, property.thumbnail_photo_url, property.cover_photo_url, property.street, property.country, property.city, property.province, property.post_code, property.owner_id])
+  .then(res => {
+    if (res.rows.length === 0) {
+      return null;
+    }
+    return res.rows[0];
+  }))
 }
 exports.addProperty = addProperty;
